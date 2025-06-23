@@ -4,6 +4,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import configuration from './config/configuration';
 import { HealthModule } from './health/health.module';
 import { AppController } from './app.controller';
+import { AuthorsModule } from './modules/authors/authors.module';
+import { BooksModule } from './modules/books/books.module';
 
 @Module({
   imports: [
@@ -22,6 +24,8 @@ import { AppController } from './app.controller';
       inject: [configuration.KEY],
     }),
     HealthModule,
+    AuthorsModule,
+    BooksModule,
   ],
   controllers: [AppController],
 })

@@ -16,7 +16,10 @@ describe('AppController', () => {
 
   describe('root', () => {
     it('should return "Hello World!"', () => {
-      expect(appController.getRoot()).toBe('Hello World!');
+      expect(appController.getRoot()).toEqual({
+        message: 'Book Management System API is running',
+        status: 'ok',
+      });
     });
   });
 });
