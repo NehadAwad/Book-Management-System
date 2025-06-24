@@ -131,7 +131,6 @@ All endpoints are prefixed with `/api/v1`.
 - **Database**: [PostgreSQL](https://www.postgresql.org/) with [TypeORM](https://typeorm.io/)
 - **Caching**: [Redis](https://redis.io/)
 - **API Specification**: [Swagger (OpenAPI)](https://swagger.io/)
-- **Error Tracking**: [Sentry](https://sentry.io/)
 - **Validation**: `class-validator`, `class-transformer`
 - **Security**: `helmet`, `express-rate-limit`
 
