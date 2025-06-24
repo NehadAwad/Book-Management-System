@@ -61,19 +61,6 @@ cp .env.example .env
 
 Now, open the `.env` file and fill in your database credentials, Redis connection info, and other environment-specific variables.
 
-### 4. Run Database and Redis (Optional: Using Docker)
-
-If you have Docker installed, you can easily start PostgreSQL and Redis services:
-
-```bash
-docker-compose up -d
-```
-*(Note: A `docker-compose.yml` file would need to be created for this.)*
-
-### 5. Run Database Migrations
-
-This project uses TypeORM's `synchronize` feature for development, which automatically syncs your entities with the database. For production, a proper migration strategy is recommended.
-
 ---
 
 ## Running the Application
