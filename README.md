@@ -1,25 +1,163 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# Book Management API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A robust and scalable REST API for managing books and authors, built with NestJS. This project is configured with industry best practices for security, performance, and developer experience.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+![Nest Logo](https://nestjs.com/img/logo-small.svg)
+
+---
+
+## Features
+
+- **CRUD Operations**: Full support for creating, reading, updating, and deleting books and authors.
+- **API Documentation**: Interactive API documentation powered by **Swagger (OpenAPI)**.
+- **Validation**: Request validation using `class-validator` and `class-transformer`.
+- **Security**:
+  - **Helmet**: Secures the app by setting various HTTP headers.
+  - **CORS**: Configured for cross-origin requests.
+  - **Rate Limiting**: Protects against brute-force attacks.
+  - **Input Sanitization**: Protects against XSS attacks.
+- **Performance**:
+  - **Response Compression**: Gzip compression for faster responses.
+  - **Caching**: **Redis**-based caching for frequently requested data.
+  - **Database Indexing**: Optimized database queries with indexes.
+- **Observability**:
+  - **Request Logging**: Detailed HTTP request logging with `morgan`.
+  - **Error Tracking**: Integrated with **Sentry** for real-time error monitoring.
+- **Health Checks**: `/health` endpoint for monitoring application status.
+
+---
+
+## Prerequisites
+
+Before you begin, ensure you have the following installed:
+- [Node.js](https://nodejs.org/) (v18 or higher)
+- [pnpm](https://pnpm.io/) (or npm/yarn)
+- [PostgreSQL](https://www.postgresql.org/)
+- [Redis](https://redis.io/)
+- [Docker](https://www.docker.com/) (optional, for running services)
+
+---
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <your-repository-url>
+cd book-management-project
+```
+
+### 2. Install Dependencies
+
+```bash
+pnpm install
+```
+
+### 3. Set Up Environment Variables
+
+Create a `.env` file in the root of the project by copying the example file:
+
+```bash
+cp .env.example .env
+```
+
+Now, open the `.env` file and fill in your database credentials, Redis connection info, and other environment-specific variables.
+
+### 4. Run Database and Redis (Optional: Using Docker)
+
+If you have Docker installed, you can easily start PostgreSQL and Redis services:
+
+```bash
+docker-compose up -d
+```
+*(Note: A `docker-compose.yml` file would need to be created for this.)*
+
+### 5. Run Database Migrations
+
+This project uses TypeORM's `synchronize` feature for development, which automatically syncs your entities with the database. For production, a proper migration strategy is recommended.
+
+---
+
+## Running the Application
+
+### Development Mode
+
+To run the application in development mode with live-reloading:
+
+```bash
+pnpm run start:dev
+```
+
+The application will be available at `http://localhost:3000`.
+
+### Production Mode
+
+To build and run the application for production:
+
+```bash
+pnpm run build
+pnpm run start:prod
+```
+
+---
+
+## Running Tests
+
+To run the test suite:
+
+```bash
+# Run all unit and integration tests
+pnpm run test
+
+# Run end-to-end (e2e) tests
+pnpm run test:e2e
+
+# Get a test coverage report
+pnpm run test:cov
+```
+
+---
+
+## API Documentation
+
+Once the application is running, you can access the interactive Swagger API documentation at:
+
+**`http://localhost:3000/docs`**
+
+This UI allows you to view all available endpoints, see their request/response formats, and execute API calls directly from your browser.
+
+### API Endpoints
+
+All endpoints are prefixed with `/api/v1`.
+
+- **Authors**
+  - `GET /authors` - Get all authors (with pagination and search)
+  - `GET /authors/:id` - Get a single author by ID
+  - `POST /authors` - Create a new author
+  - `PATCH /authors/:id` - Update an author
+  - `DELETE /authors/:id` - Delete an author
+
+- **Books**
+  - `GET /books` - Get all books (with pagination, search, and author filter)
+  - `GET /books/:id` - Get a single book by ID
+  - `POST /books` - Create a new book
+  - `PATCH /books/:id` - Update a book
+  - `DELETE /books/:id` - Delete a book
+
+- **Health**
+  - `GET /health` - Check the health status of the application and its database connection.
+
+---
+
+## Tech Stack
+
+- **Framework**: [NestJS](https://nestjs.com/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/) with [TypeORM](https://typeorm.io/)
+- **Caching**: [Redis](https://redis.io/)
+- **API Specification**: [Swagger (OpenAPI)](https://swagger.io/)
+- **Error Tracking**: [Sentry](https://sentry.io/)
+- **Validation**: `class-validator`, `class-transformer`
+- **Security**: `helmet`, `express-rate-limit`
 
 ## Description
 
