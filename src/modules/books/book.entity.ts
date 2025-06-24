@@ -1,9 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne, JoinColumn, Index } from 'typeorm';
 import { Author } from '../authors/author.entity';
 
 @Entity('books')
 export class Book {
   @PrimaryGeneratedColumn('uuid') id: string;
+  @Index()
   @Column() title: string;
   @Column({ unique: true }) isbn: string;
   @Column('date', { nullable: true }) publishedDate: string;

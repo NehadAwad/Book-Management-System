@@ -1,30 +1,51 @@
-import { Controller, Post, Get, Patch, Delete, Param, Body, Query, HttpCode } from '@nestjs/common';
+import { Controller, Post, Get, Patch, Delete, Param, Body, Query, HttpCode, UseInterceptors } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
+import { FindAuthorsQueryDto } from './dto/find-authors-query.dto';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
+import { ApiTags, ApiOperation } from '@nestjs/swagger';
 
+@ApiTags('Authors')
 @Controller('authors')
 export class AuthorsController {
   constructor(private readonly svc: AuthorsService) {}
 
-  @Post() create(@Body() dto: CreateAuthorDto) {
+  @Post()
+  @ApiOperation({ summary: 'Create a new author' })
+  create(@Body() dto: CreateAuthorDto) {
     return this.svc.create(dto);
   }
 
   @Get()
-  findAll(@Query('page') page: string, @Query('limit') limit: string, @Query('search') search: string) {
-    return this.svc.findAll(+page || 1, +limit || 10, search);
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('all_authors')
+  @CacheTTL(120) // 2 minutes
+  @ApiOperation({ summary: 'Get all authors with pagination and filtering' })
+  findAll(@Query() query: FindAuthorsQueryDto) {
+    return this.svc.findAll(
+      +(query.page ?? '1'),
+      +(query.limit ?? '10'),
+      query.search
+    );
   }
 
-  @Get(':id') findOne(@Param('id') id: string) {
+  @Get(':id')
+  @ApiOperation({ summary: 'Get an author by ID' })
+  findOne(@Param('id') id: string) {
     return this.svc.findOne(id);
   }
 
-  @Patch(':id') update(@Param('id') id: string, @Body() dto: UpdateAuthorDto) {
+  @Patch(':id')
+  @ApiOperation({ summary: 'Update an author' })
+  update(@Param('id') id: string, @Body() dto: UpdateAuthorDto) {
     return this.svc.update(id, dto);
   }
 
-  @Delete(':id') @HttpCode(204) remove(@Param('id') id: string) {
+  @Delete(':id')
+  @HttpCode(204)
+  @ApiOperation({ summary: 'Delete an author' })
+  remove(@Param('id') id: string) {
     return this.svc.remove(id);
   }
 }

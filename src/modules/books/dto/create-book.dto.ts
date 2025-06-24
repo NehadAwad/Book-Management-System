@@ -1,7 +1,10 @@
 import { IsString, IsOptional, IsDateString, IsUUID, IsISBN } from 'class-validator';
+import { Transform } from 'class-transformer';
+import * as sanitizeHtml from 'sanitize-html';
 
 export class CreateBookDto {
   @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? sanitizeHtml(value) : value))
   title: string;
 
   @IsISBN()
@@ -13,6 +16,7 @@ export class CreateBookDto {
 
   @IsOptional()
   @IsString()
+  @Transform(({ value }) => (typeof value === 'string' ? sanitizeHtml(value) : value))
   genre?: string;
 
   @IsUUID()

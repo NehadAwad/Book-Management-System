@@ -1,15 +1,34 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import configuration from './config/configuration';
+import { throttlerConfig } from './config/throttle.config';
 import { HealthModule } from './health/health.module';
 import { AppController } from './app.controller';
 import { AuthorsModule } from './modules/authors/authors.module';
 import { BooksModule } from './modules/books/books.module';
+import { CacheModule } from '@nestjs/cache-manager';
+import { redisStore } from 'cache-manager-redis-store';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
+    CacheModule.registerAsync({
+      isGlobal: true,
+      useFactory: async () => ({
+        store: await redisStore({
+          socket: {
+            host: process.env.REDIS_HOST,
+            port: parseInt(process.env.REDIS_PORT || '6379', 10),
+          },
+          ttl: 60, // seconds
+        }),
+      }),
+    }),
+    ThrottlerModule.forRoot(throttlerConfig),
     TypeOrmModule.forRootAsync({
       useFactory: (config) => ({
         type: 'postgres',
@@ -28,7 +47,11 @@ import { BooksModule } from './modules/books/books.module';
     BooksModule,
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
+  ],
 })
 export class AppModule {}
-{
-}
