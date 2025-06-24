@@ -19,7 +19,7 @@ A robust and scalable REST API for managing books and authors, built with NestJS
   - **Caching**: **Redis**-based caching for frequently requested data.
   - **Database Indexing**: Optimized database queries with indexes.
 - **Observability**:
-  - **Request Logging**: Detailed HTTP request logging with `morgan`.
+  - **Request Logging**: Structured HTTP request logging with **Winston** (all requests are logged with method, URL, status, and response time).
   - **Error Tracking**: Integrated with **Sentry** for real-time error monitoring.
 - **Health Checks**: `/health` endpoint for monitoring application status.
 
@@ -74,15 +74,6 @@ pnpm run start:dev
 ```
 
 The application will be available at `http://localhost:3000`.
-
-### Production Mode
-
-To build and run the application for production:
-
-```bash
-pnpm run build
-pnpm run start:prod
-```
 
 ---
 
@@ -179,3 +170,38 @@ $ pnpm run test:e2e
 # test coverage
 $ pnpm run test:cov
 ```
+
+## Database Migrations
+
+This project uses TypeORM migrations for safe and versioned schema changes. For development, you may use TypeORM's `synchronize` feature, but for production, always use migrations.
+
+### Migration Commands
+
+- **Generate a migration:**
+  ```bash
+  pnpm run migration:generate src/migrations/YourMigrationName
+  ```
+- **Run migrations:**
+  ```bash
+  pnpm run migration:run
+  ```
+- **Revert last migration:**
+  ```bash
+  pnpm run migration:revert
+  ```
+
+See `data-source.ts` for configuration details.
+
+## Logging
+
+This project uses **Winston** for all application and request logging. Every HTTP request is logged with method, URL, status, and response time using a custom middleware. Logs are output in a structured format and can be easily extended to log to files or external services.
+
+**Note:** The `morgan` logger is no longer used; all logging is handled by Winston.
+
+## Sentry DSN
+
+To enable error tracking, set `SENTRY_DSN` in your `.env` file. Example:
+```env
+SENTRY_DSN=your_sentry_dsn_here
+```
+If left blank, Sentry will be disabled.
