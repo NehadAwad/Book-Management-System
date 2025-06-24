@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, MiddlewareConsumer, NestModule } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ThrottlerModule } from '@nestjs/throttler';
@@ -12,6 +12,9 @@ import { AuthorsModule } from './modules/authors/authors.module';
 import { BooksModule } from './modules/books/books.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
+import { RequestLoggerMiddleware } from './common/middleware/request-logger.middleware';
+import { WinstonModule } from 'nest-winston';
+import { winstonLoggerConfig } from './common/logger/winston-logger.config';
 
 @Module({
   imports: [
@@ -45,6 +48,7 @@ import { redisStore } from 'cache-manager-redis-store';
     HealthModule,
     AuthorsModule,
     BooksModule,
+    WinstonModule.forRoot(winstonLoggerConfig),
   ],
   controllers: [AppController],
   providers: [
@@ -54,4 +58,8 @@ import { redisStore } from 'cache-manager-redis-store';
     },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer.apply(RequestLoggerMiddleware).forRoutes('*');
+  }
+}

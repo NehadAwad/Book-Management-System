@@ -10,24 +10,22 @@ import * as compression from 'compression';
 import helmet from 'helmet';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
-import * as morgan from 'morgan';
+import { WinstonModule } from 'nest-winston';
+import { winstonLoggerConfig } from './common/logger/winston-logger.config';
 
 async function bootstrap() {
   // Initialize Sentry
   Sentry.init({ dsn: process.env.SENTRY_DSN, tracesSampleRate: 1.0 });
 
-  const app = await NestFactory.create(AppModule, { 
+  const app = await NestFactory.create(AppModule, {
     cors: {
       origin: process.env.CORS_ORIGIN || '*',
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
     },
-    logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+    logger: WinstonModule.createLogger(winstonLoggerConfig),
   });
-
-  // Add request logging
-  app.use(morgan('dev'));
 
   // Enable API versioning
   app.enableVersioning({
