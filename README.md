@@ -1,6 +1,6 @@
 # Book Management API
 
-A robust and scalable REST API for managing books and authors, built with NestJS. This project is configured with industry best practices for security, performance, and developer experience.
+A robust and scalable REST API for managing books and authors, built with NestJS.
 
 ---
 
