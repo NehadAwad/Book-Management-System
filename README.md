@@ -135,10 +135,6 @@ All endpoints are prefixed with `/api/v1`.
 - **Validation**: `class-validator`, `class-transformer`
 - **Security**: `helmet`, `express-rate-limit`
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
 ## Project setup
 
 ```bash
@@ -198,10 +194,3 @@ This project uses **Winston** for all application and request logging. Every HTT
 
 **Note:** The `morgan` logger is no longer used; all logging is handled by Winston.
 
-## Sentry DSN
-
-To enable error tracking, set `SENTRY_DSN` in your `.env` file. Example:
-```env
-SENTRY_DSN=your_sentry_dsn_here
-```
-If left blank, Sentry will be disabled.
